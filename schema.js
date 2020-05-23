@@ -69,6 +69,23 @@ const mutation = new GraphQLObjectType({
                 books.push(book)
                 return book
             }
+        },
+        editBook: {
+            type: BookType,
+            args: {
+                id: { type: new GraphQLNonNull(GraphQLInt) },
+                title: { type: GraphQLString },
+                available: { type: GraphQLBoolean }
+            },
+            resolve(parentValue, args) {
+                const index = books.findIndex((b) => b.id == args.id)
+
+                if (index > -1) {
+                    if (args.title) books[index].title = args.title;
+                     if (args.hasOwnProperty("available")) book[index].available = args.available;
+                     return books[index]
+                }
+            }
         }
     }
 })
