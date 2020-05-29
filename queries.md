@@ -16,3 +16,24 @@ query {
   }
 }
 
+Below are light mutations which delete, edit, and post to your DB
+
+mutation{
+  deleteBook(id: 0) {
+    title
+  }
+}
+
+mutation{
+  editBook(id: 1, available: false) {
+    title,
+    id,
+    available 
+  }
+}
+
+mutation{
+  addBook(title:"asd") {
+    title
+  }
+}

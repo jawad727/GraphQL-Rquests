@@ -82,8 +82,21 @@ const mutation = new GraphQLObjectType({
 
                 if (index > -1) {
                     if (args.title) books[index].title = args.title;
-                     if (args.hasOwnProperty("available")) book[index].available = args.available;
+                    if (args.hasOwnProperty("available")) books[index].available = args.available;
                      return books[index]
+                }
+            }
+        },
+        deleteBook: {
+            type: BookType,
+            args: {
+               id: { type: new GraphQLNonNull(GraphQLInt) } 
+            },
+            resolve(parentValue, args) {
+                const index = books.findIndex((b) => b.id === args.id)
+                if (index > -1) {
+                    const elem = books.splice(index, 1)[0]
+                    return elem
                 }
             }
         }
