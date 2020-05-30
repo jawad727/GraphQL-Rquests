@@ -1,0 +1,29 @@
+.card {
+    display: flex;
+    width: 500px;
+    border: 1px solid lightgrey;
+    border-radius: 15px;
+    margin: 10px;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 2px 2px 5px grey;
+}
+
+.card button {
+    
+    padding: 8px;
+    margin-left: 10px;
+    /* background-color: lightgrey; */
+    border: 2px solid black;
+    border-radius: 5px;
+    font-size: 1rem;
+}
+
+.card button:hover {
+    box-shadow: 1px 1px 5px lightgrey;
+}
+
+.card p {
+    font-size: 1.1rem;
+    font-family: Montserrat,sans-serif;
+}

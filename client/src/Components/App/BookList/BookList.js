@@ -23,55 +23,77 @@ const CHANGE_AVAILABILITY = gql`
     }  
 `
 
+const ADD_BOOK = gql`
+    mutation addBook($title: String) {
+        addBook(title: $title) {
+            title
+        }
+    }  
+`
+
 class BookList extends Component {
 
-render() {
-    return (
-        <Query query={GET_BOOKS}>
-            {({ loading, error, data }) => {
-                if (loading) {
-                    return <div> Loading </div>
-                }
-
-                if (error) {
-                    return <div> Error {error.toString()} </div>
-                }
-                return (
-                    <div>
-
-                        <p> Add a book </p>
-                        <input />
-                        <input />
-
-                        {console.log(data.books)}
-                        {data.books.map(item => (
-                            <div key={item.id}>                
-                                <Mutation mutation={CHANGE_AVAILABILITY} >
-                                    {(changeAvailability, { data }) => (
-
-                                        <div>
-                                            {`${item.title}: ${item.available ? 'Available' : 'Not Available'}`}
-                                            <button onClick={(e) => {
-                                                changeAvailability({
-                                                    variables: { id: item.id, available: !item.available }
-                                                })
-                                            }}> 
-                                                Change Availability 
-                                            </button>
-                                      
-                                        </div>
-
-                                    )}
-                                </Mutation>
-                            </div>
-                        ))}
-
-                    </div>
-                )
-            }}
-        </Query>
-      );
+    state = {
+        title: ""
     }
+
+    changeHandler = (e) => {
+        this.setState({
+            title: e.target.value
+        })
+    }
+
+    render() {
+        console.log(this.state.title)
+        return (
+            <Query query={GET_BOOKS}>
+                {({ loading, error, data }) => {
+                    if (loading) {
+                        return <div> Loading </div>
+                    }
+
+                    if (error) {
+                        return <div> Error {error.toString()} </div>
+                    }
+                    return (
+                        <div>
+
+                            <p> Add a book </p>
+                            
+                            <Mutation mutation={ADD_BOOK} >
+                            {(addBook, { data }) => (
+                                <form onSubmit={(e) => {
+                                    e.preventDefault()
+                                    addBook({ 
+                                        variables: { title: this.state.title }
+                                    })
+                                }}>
+                                    <input placeholder="title" value={this.state.title} onChange={(e) => this.changeHandler(e)} />
+                                    <button> Submit </button>
+                                </form>
+                            )}
+                            </Mutation>
+
+                            {data.books.map(item => (
+                                <div key={item.id}>                
+                                    <Mutation mutation={CHANGE_AVAILABILITY} >
+                                        {(changeAvailability, { data }) => (
+
+                                            <div>
+                                                <Card item={item} changeAvailability={changeAvailability} />
+                                            </div>
+
+                                        )}
+                                    </Mutation>
+                                </div>
+                            ))}
+
+                        </div>
+                    )
+                }}
+            </Query>
+        );
+        }
 
 }
 
