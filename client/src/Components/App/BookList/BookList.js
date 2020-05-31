@@ -1,7 +1,7 @@
-import React, { Component } from 'react';
+import React, { Component, useState } from 'react';
 import Card from "../../Shared/Card"
-
-import { gql } from "apollo-boost"
+import { useQuery, useMutation } from '@apollo/react-hooks'
+import gql from "graphql-tag"
 import { Query, Mutation } from "react-apollo"
 
 const GET_BOOKS = gql`
@@ -13,6 +13,16 @@ const GET_BOOKS = gql`
         }
     }
 `
+
+const GET_BOOKS2 = gql`
+    query book($id: Int!) {
+        book(id: $id) {
+            title
+        }
+    }
+`
+
+
 
 const CHANGE_AVAILABILITY = gql`
     mutation editBook($id: Int!, $available: Boolean!) {
@@ -31,22 +41,31 @@ const ADD_BOOK = gql`
     }  
 `
 
-class BookList extends Component {
 
-    state = {
-        title: ""
+function BookList() {
+
+
+    const [title, setTitle] = useState("")
+    const [booksArr, setBooksArr] = useState([])
+
+    const changeHandler = (e) => {
+        setTitle(e.target.value)
     }
 
-    changeHandler = (e) => {
-        this.setState({
-            title: e.target.value
-        })
-    }
+    const { qdata, qclient } = useQuery(GET_BOOKS2, {
+        variables: { id: 1 }
+      });
 
-    render() {
-        console.log(this.state.title)
+    const [changeAvail, { data }] = useMutation(CHANGE_AVAILABILITY);
+
+      {console.log(qdata, qclient)}
+
         return (
+            <>
+           
             <Query query={GET_BOOKS}>
+            
+                
                 {({ loading, error, data }) => {
                     if (loading) {
                         return <div> Loading </div>
@@ -65,26 +84,26 @@ class BookList extends Component {
                                 <form onSubmit={(e) => {
                                     e.preventDefault()
                                     addBook({ 
-                                        variables: { title: this.state.title }
+                                        variables: { title: title }
+                                    }).then(() => {
+                                        console.log("asd")
                                     })
                                 }}>
-                                    <input placeholder="title" value={this.state.title} onChange={(e) => this.changeHandler(e)} />
+                                    <input placeholder="title" value={title} onChange={(e) => changeHandler(e)} />
                                     <button> Submit </button>
                                 </form>
                             )}
                             </Mutation>
 
+
                             {data.books.map(item => (
                                 <div key={item.id}>                
-                                    <Mutation mutation={CHANGE_AVAILABILITY} >
-                                        {(changeAvailability, { data }) => (
+
 
                                             <div>
-                                                <Card item={item} changeAvailability={changeAvailability} />
+                                                <Card item={item} changeAvailability={changeAvail} />
                                             </div>
 
-                                        )}
-                                    </Mutation>
                                 </div>
                             ))}
 
@@ -92,8 +111,8 @@ class BookList extends Component {
                     )
                 }}
             </Query>
+            </>
         );
-        }
 
 }
 
