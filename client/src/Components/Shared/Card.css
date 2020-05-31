@@ -5,8 +5,9 @@
     border-radius: 15px;
     margin: 10px;
     align-items: center;
-    justify-content: center;
+    justify-content: space-between;
     box-shadow: 2px 2px 5px grey;
+    padding: 5px 20px;
 }
 
 .card button {

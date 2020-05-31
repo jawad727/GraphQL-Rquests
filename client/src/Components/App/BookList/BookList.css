@@ -1,0 +1,22 @@
+.addAbookTitle {
+    font-size: 18px;
+    font-weight: 500;
+}
+
+.bookList {
+    display: flex;
+    justify-content: center;
+}
+
+.addBookForm input {
+    width: 410px;
+    height: 25px;
+    padding-left: 10px;
+    font-size: 1.1rem;
+}
+
+.addBookForm button {
+    height: 30px;
+    width: 100px;
+    margin-left: 10px;
+}
