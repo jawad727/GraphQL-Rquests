@@ -56,7 +56,8 @@ function BookList() {
         variables: { id: 1 }
       });
 
-    const [changeAvail, { data }] = useMutation(CHANGE_AVAILABILITY);
+    const [changeAvailability, { availableData }] = useMutation(CHANGE_AVAILABILITY);
+    const [addBook, { addedBookData }] = useMutation(ADD_BOOK);
 
       {console.log(qdata, qclient)}
 
@@ -79,8 +80,6 @@ function BookList() {
 
                             <p> Add a book </p>
                             
-                            <Mutation mutation={ADD_BOOK} >
-                            {(addBook, { data }) => (
                                 <form onSubmit={(e) => {
                                     e.preventDefault()
                                     addBook({ 
@@ -92,16 +91,13 @@ function BookList() {
                                     <input placeholder="title" value={title} onChange={(e) => changeHandler(e)} />
                                     <button> Submit </button>
                                 </form>
-                            )}
-                            </Mutation>
-
 
                             {data.books.map(item => (
-                                <div key={item.id}>                
+                                <div key={item.id}>
 
 
                                             <div>
-                                                <Card item={item} changeAvailability={changeAvail} />
+                                                <Card item={item} changeAvailability={changeAvailability} />
                                             </div>
 
                                 </div>
