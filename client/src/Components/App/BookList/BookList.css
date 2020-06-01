@@ -10,9 +10,10 @@
 
 .addBookForm input {
     width: 410px;
-    height: 25px;
+    height: 30px;
     padding-left: 10px;
     font-size: 1.1rem;
+    border: 2px solid black;
 }
 
 .addBookForm button {

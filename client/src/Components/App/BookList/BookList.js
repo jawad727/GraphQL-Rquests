@@ -1,8 +1,11 @@
-import React, { Component, useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import Card from "../../Shared/Card"
 import { useQuery, useMutation } from '@apollo/react-hooks'
 import { GET_BOOKS, CHANGE_AVAILABILITY, DELETE_BOOK, ADD_BOOK } from "../../../API/gqlQueries"
 import "./BookList.css"
+import { store } from "../../../Store/store"
+
+
 
 
 function BookList() {
@@ -10,12 +13,16 @@ function BookList() {
     // State
 
     const [title, setTitle] = useState("")
+    const [loading, setLoading] = useState(true)
     const [booksArr, setBooksArr] = useState([])
+    const [contextInput, setContextInput] = useState("")
+
+    const tempContext = useContext(store)
 
     // Lifecycle functions
 
     useEffect(() => {
-        console.log(booksArr)
+        console.log( tempContext.state.myFormFieldValue )
     })
 
     // Other functions
@@ -44,19 +51,23 @@ function BookList() {
 
     const { loading: booksLoading, error: booksError, data: booksData } = useQuery(GET_BOOKS, {
         onCompleted: (res) => {
-            setBooksArr(res.books)
+            setBooksArr(res.books);
+            setLoading(false);
         }
     })
 
 
         return (
+            <>
+            {loading ? <p> loading... </p> : 
+
             <div className="bookList" >
 
                 {booksLoading ? <div> Loading... </div> : null}
                         
                 {booksError ? <div> Error </div> : null}
 
-                {/* {booksArr ?   */}
+        
                 
                 <div>
 
@@ -84,10 +95,30 @@ function BookList() {
                         </div>
                     ))}
 
-                </div>  
-                {/* : null } */}
+                    <p> {tempContext.state.myFormFieldValue} </p>
 
-            </div>
+                    <form>
+                        <input
+                            type="text"
+                            value={contextInput}
+                            onChange={(e) => {
+                                setContextInput(e.target.value)
+                            }}
+                        />
+                        <button onClick={(e) => {
+                            e.preventDefault()
+                            tempContext.dispatch({
+                                type: "UPDATE_VALUE",
+                                payload: contextInput
+                            })
+                        }} > set </button>
+                    </form>
+
+                </div>  
+           
+
+            </div> }
+            </>
         );
 
 }
